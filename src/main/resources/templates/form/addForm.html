@@ -33,6 +33,52 @@
         </div>
 
         <hr class="my-4">
+        <!-- single checkbox -->
+        <!--순수 HTML으로 만든체크박스에 표시하지 않고 상품 등록시
+        클라이언트에서는 아예 서버에 값을 보내지 않는다.  log -> open=null
+        이 문제를 해결하기 위해 스프링에서 히든 필드를 하나 만들어 넘길 수 있다.-->
+        <div>판매 여부</div>
+        <div>
+            <div class="form-check">
+                <input type="checkbox" id="open" th:field="*{open}" class="form-check-input">
+<!--                <input type="hidden" name="_open" value="on"/>&lt;!&ndash;히든 필드&ndash;&gt;-->
+                <label for="open"class="form-check-label">판매 오픈</label>
+            </div>
+        </div>
+
+        <!-- multi checkbox -->
+        <div>
+            <div>등록 지역</div>
+            <div th:each="region : ${regions}" class="form-check form-check-inline">
+                <input type="checkbox" th:field="*{regions}" th:value="${region.key}" class="form-check-input">
+                <label th:for="${#ids.prev('regions')}"
+                       th:text="${region.value}" class="form-check-label">서울</label>
+            </div>
+        </div>
+        <!-- radio button -->
+        <!-- checkbox와 달리 radio는 히든필드를 만들지 않는다.
+          radio는 선택하지 않는다면 null값으로 서버에 전달되고 선택한다 해도 하나만 선택할 수 있고 선택을 취소하는 것이 불가능하기 떄문이다.-->
+        <div>
+            <div>상품 종류</div>
+            <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{itemType}" th:value="${type.name()}" class="form-check-input">
+                <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label">
+                    BOOK
+                </label>
+            </div>
+        </div>
+
+        <!-- SELECT -->
+        <div>
+            <div>배송 방식</div>
+            <select th:field="*{deliveryCode}" class="form-select">
+                <option value="">==배송 방식 선택==</option>
+                <option th:each="deliveryCode : ${deliveryCodes}" th:value="${deliveryCode.code}"
+                        th:text="${deliveryCode.displayNAme}">FAST</option>
+            </select>
+        </div>
+
+        <hr class="my-4">
 
         <div class="row">
             <div class="col">
@@ -42,7 +88,8 @@
                 <button class="w-100 btn btn-secondary btn-lg"
                         onclick="location.href='items.html'"
                         th:onclick="|location.href='@{/form/items}'|"
-                        type="button">취소</button>
+                        type="button">취소
+                </button>
             </div>
         </div>
 
